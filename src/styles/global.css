@@ -1,0 +1,259 @@
+/* ==========================================================================
+   IMOVIES — GLOBAL DESIGN SYSTEM & VARIABLES
+   ========================================================================== */
+
+:root {
+  /* Color Palette - Deep Charcoal & Cinema Night */
+  --bg-primary: #08090d;
+  --bg-secondary: #0f121a;
+  --bg-tertiary: #161a25;
+  --bg-surface: #1d2232;
+  --bg-card: rgba(22, 26, 37, 0.75);
+  --bg-card-hover: rgba(30, 36, 52, 0.9);
+  --bg-glass: rgba(15, 18, 26, 0.82);
+  --bg-input: #121622;
+
+  /* Cinema Crimson Accents */
+  --primary: #e50914;
+  --primary-hover: #ff1f2d;
+  --primary-active: #b80710;
+  --primary-subtle: rgba(229, 9, 20, 0.12);
+  --primary-glow: rgba(229, 9, 20, 0.35);
+
+  /* Secondary Accents */
+  --accent-gold: #f59e0b;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #a855f7;
+
+  /* Neutral & Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-disabled: #475569;
+  --text-inverse: #0a0b0e;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-light: rgba(255, 255, 255, 0.14);
+  --border-focus: rgba(229, 9, 20, 0.6);
+  --border-crimson: rgba(229, 9, 20, 0.4);
+
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+
+  /* Cinema Seat Colors */
+  --seat-available: #222838;
+  --seat-available-border: rgba(255, 255, 255, 0.18);
+  --seat-selected: #e50914;
+  --seat-occupied: #151822;
+  --seat-vip: #8b5cf6;
+  --seat-premium: #f59e0b;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.75);
+  --shadow-glow: 0 0 24px rgba(229, 9, 20, 0.3);
+  --shadow-glow-sm: 0 0 12px rgba(229, 9, 20, 0.25);
+
+  /* Border Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+
+  /* Layout */
+  --container-max: 1280px;
+  --navbar-height: 72px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 9, 20, 0.08), transparent 70%),
+    radial-gradient(circle at 90% 10%, rgba(30, 41, 59, 0.3), transparent 40%);
+  background-attachment: fixed;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 2.8vw, 2.25rem); }
+h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); }
+h4 { font-size: 1.2rem; }
+h5 { font-size: 1rem; }
+
+p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface);
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+/* Focus Outline Accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* Layout Utilities */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: var(--navbar-height);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.section-wrapper {
+  padding: 3.5rem 0;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  gap: 1rem;
+}
+
+.section-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1.25em;
+  background: var(--primary);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.view-all-link:hover {
+  color: var(--primary-hover);
+  transform: translateX(3px);
+}
