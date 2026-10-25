@@ -45,6 +45,7 @@ export const storage = {
 
 export const STORAGE_KEYS = {
   AUTH_USER: 'imovies_auth_user',
+  AUTH_TOKEN: 'imovies_auth_token',
   BOOKINGS: 'imovies_bookings',
   ACTIVE_BOOKING: 'imovies_active_booking',
   FAVORITES: 'imovies_favorites'

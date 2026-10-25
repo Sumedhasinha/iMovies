@@ -175,6 +175,7 @@ export function BookingProvider({ children }) {
     const pricing = calculateBookingPrice(currentSeats, currentSnacks);
 
     const bookingPayload = {
+      showtimeId: activeBooking.showtime?._id || activeBooking.showtime?.id || '',
       movie: {
         id: activeBooking.movie.id,
         title: activeBooking.movie.title,

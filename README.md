@@ -85,58 +85,91 @@
 
 ## 🛠️ Technology Stack
 
+### Frontend:
 - **React 18** (Vite build system)
 - **JavaScript (ES Modules)**
 - **React Router DOM v7** (declarative client routing)
 - **Plain CSS3** (Custom properties/CSS variables, responsive media queries, glassmorphism)
 - **Lucide React** (consistent iconography)
-- **React Context API** (`AuthContext`, `BookingContext`, `ToastContext`)
-- **LocalStorage API** (demo persistence for bookings, user sessions, and active drafts)
+- **React Context API** (`AuthContext`, `BookingContext`, `WatchlistContext`, `ToastContext`)
 - **Canvas Confetti** (celebration effects)
+
+### Backend (`server/`):
+- **Node.js & Express.js** (REST API)
+- **MongoDB & Mongoose** (Data models with text indexes and atomic locking)
+- **JWT (JSON Web Tokens)** & **Bcrypt.js** (Authentication & password hashing)
+- **Helmet, CORS, Rate Limiting** (Defensive API security)
+- **Vitest & Supertest** (Automated backend test suite)
 
 ---
 
-## 🚀 Running the Project
+## 🚀 Running the Full-Stack Application
 
 ### Prerequisites
-- Node.js (v18+)
-- npm (v9+)
+- **Node.js** (v18+)
+- **MongoDB** (Local Community Server running on `mongodb://127.0.0.1:27017` or MongoDB Atlas)
+- **npm** (v9+)
 
-### Installation & Launch
+### 1. Install Dependencies
 ```bash
-# Navigate to the project directory
-cd imovies
-
-# Install dependencies
+# Install frontend dependencies
 npm install
 
-# Start the Vite development server
+# Install backend dependencies
+cd server && npm install && cd ..
+```
+
+### 2. Seed MongoDB Database
+Populates MongoDB with 14 movies, 4 theatres, 112 multi-day showtimes, admin user (`admin@imovies.vip` / `AdminPass2026!`), and customer demo (`alex.morgan@imovies.vip` / `CinemaPass2026!`):
+```bash
+npm run seed
+```
+
+### 3. Start the Development Servers
+
+You can launch both frontend and backend concurrently with a single command:
+```bash
+npm run dev:all
+```
+
+Or run them individually in separate terminal sessions:
+```bash
+# Terminal 1 — Backend REST API (Port 5001)
+npm run server
+
+# Terminal 2 — Frontend UI (Port 5173)
 npm run dev
 ```
 
-Visit `http://localhost:5173` in your browser.
-
-### Building for Production
-```bash
-npm run build
-```
-The optimized production bundle will be generated in `dist/`.
+Visit **`http://localhost:5173`** in your browser.
 
 ---
 
-## 🔌 Future Backend Readiness & Simulated Components
+## 🧪 Running Automated Tests
 
-The application includes a clean service layer in `src/services/api.js` structured for future connection to an **Express.js REST API** and **MongoDB**:
+Run backend integration and unit tests (auth, movies, showtimes, and concurrent race-condition booking tests):
+```bash
+npm run test:server
+```
 
-| API Service Function | Current Demo Behavior | Future Backend Integration |
+---
+
+## 🔌 Live REST API Integration
+
+The frontend connects directly to the Express + MongoDB backend via `src/services/api.js`. If the backend is temporarily offline, the frontend seamlessly falls back to local data with persistent LocalStorage state.
+
+| API Service | REST Endpoint | Backend Implementation |
 |---|---|---|
-| `getMovies(filters)` | Filters and sorts in-memory mock dataset (`src/data/movies.js`) with simulated async latency | `GET /api/v1/movies?genre=...&search=...` |
-| `getMovieById(id)` | Queries movie by slug/ID from mock data | `GET /api/v1/movies/:id` |
-| `getShowtimes(movieId, date)` | Returns scheduled times and auditorium formats | `GET /api/v1/theatres/showtimes?movieId=...&date=...` |
-| `getOccupiedSeats(showtimeKey)` | Generates deterministic occupied seats + incorporates locally booked seats | `GET /api/v1/bookings/occupied-seats/:showtimeId` |
-| `createBooking(data)` | Validates payload and stores in browser `localStorage` | `POST /api/v1/bookings` with transactional seat locking in MongoDB |
-| `getMyBookings()` | Reads saved booking array from `localStorage` | `GET /api/v1/users/me/bookings` with JWT authentication |
-| `login(credentials)` | Simulates JWT login and saves demo user to `localStorage` | `POST /api/v1/auth/login` (bcrypt hash verification & HTTP-only cookies) |
-| `signup(userData)` | Simulates user creation and logs in user | `POST /api/v1/auth/register` |
+| `getMovies(filters)` | `GET /api/movies` | MongoDB text search, genre and release status filters |
+| `getMovieById(id)` | `GET /api/movies/:id` | Queries movie by unique slug or MongoDB ObjectId |
+| `getShowtimes(movieId, date)` | `GET /api/showtimes` | Groups showtimes by theatre with format and pricing tiers |
+| `getOccupiedSeats(showtimeId)` | `GET /api/showtimes/:id/seats` | Real-time seat inventory and occupied seat identifiers |
+| `createBooking(data)` | `POST /api/bookings` | **Atomic double-booking prevention**, price verification, ticket generation |
+| `getMyBookings()` | `GET /api/bookings/my` | JWT authenticated user reservation history |
+| `cancelBooking(id)` | `PATCH /api/bookings/:id/cancel` | Cancels reservation and releases seats back into inventory |
+| `login(credentials)` | `POST /api/auth/login` | Bcrypt password check, JWT token issuance |
+| `signup(userData)` | `POST /api/auth/signup` | Validated user registration |
 
-> **Note on Simulated Data**: All payments, card processing, seat occupancy, and QR codes are strictly simulated for frontend presentation and portfolio demonstration. No real charges are made.
+> **Security Note**: All demo checkout payments are simulated for presentation purposes. Server-side price calculation strictly enforces ticket pricing, convenience fees, and taxes.
+
+For detailed backend architecture and API documentation, see [`server/README.md`](file:///C:/Users/sumed/.gemini/antigravity/scratch/imovies/server/README.md).

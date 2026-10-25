@@ -7,11 +7,24 @@ import { formatCurrency } from '../utils/pricing';
 export default function ShowtimeSelector({
   theatresData = [],
   onConfirmSelection,
-  selectedSlot = null
+  selectedSlot = null,
+  selectedDate: propSelectedDate,
+  onDateChange,
+  loading = false
 }) {
   const dates = getAvailableDates(7);
-  const [selectedDate, setSelectedDate] = useState(dates[0]);
+  const [internalSelectedDate, setInternalSelectedDate] = useState(dates[0]);
+  const selectedDate = propSelectedDate || internalSelectedDate;
   const [chosenSelection, setChosenSelection] = useState(selectedSlot);
+
+  const handleDateClick = (d) => {
+    if (onDateChange) {
+      onDateChange(d);
+    } else {
+      setInternalSelectedDate(d);
+    }
+    setChosenSelection(null);
+  };
 
   const handleSlotClick = (theatre, showtime) => {
     setChosenSelection({
@@ -52,11 +65,7 @@ export default function ShowtimeSelector({
               <button
                 key={d.isoDate}
                 type="button"
-                onClick={() => {
-                  setSelectedDate(d);
-                  // Reset slot if date changed
-                  setChosenSelection(null);
-                }}
+                onClick={() => handleDateClick(d)}
                 className={`card-glass ${isSelected ? 'active-date' : ''}`}
                 style={{
                   padding: '0.75rem 1.15rem',
@@ -103,7 +112,15 @@ export default function ShowtimeSelector({
 
       {/* 2. Theatres & Showtimes List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {theatresData.length === 0 ? (
+        {loading ? (
+          <div
+            className="card-glass"
+            style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}
+          >
+            <div style={{ display: 'inline-block', width: '32px', height: '32px', border: '3px solid rgba(229,9,20,0.3)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '0.75rem' }} />
+            <div>Loading available showtimes...</div>
+          </div>
+        ) : theatresData.length === 0 ? (
           <div
             className="card-glass"
             style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-muted)' }}

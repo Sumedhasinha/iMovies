@@ -73,8 +73,9 @@ export default function SeatSelection() {
 
       // Fetch occupied seats for this showtime combination
       const showtimeKey = `${movieId}_${activeBooking.theatre?.id || 'th-1'}_${activeBooking.date?.isoDate || 'today'}_${activeBooking.showtime?.time || 'slot'}`;
+      const showtimeId = activeBooking.showtime?._id || activeBooking.showtime?.id || null;
       try {
-        const occRes = await getOccupiedSeats(showtimeKey);
+        const occRes = await getOccupiedSeats(showtimeKey, showtimeId);
         if (occRes.success) {
           setOccupiedSeats(occRes.data || []);
         }

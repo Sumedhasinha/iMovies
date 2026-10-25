@@ -12,11 +12,21 @@ export function AuthProvider({ children }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // If not logged in, create a friendly guest default state or leave null
-    const stored = storage.get(STORAGE_KEYS.AUTH_USER, null);
-    if (stored) {
-      setUser(stored);
+    async function verifySession() {
+      const storedToken = storage.get(STORAGE_KEYS.AUTH_TOKEN, null);
+      if (storedToken) {
+        const res = await api.getMe();
+        if (res.success && res.data) {
+          setUser(res.data);
+          return;
+        }
+      }
+      const stored = storage.get(STORAGE_KEYS.AUTH_USER, null);
+      if (stored) {
+        setUser(stored);
+      }
     }
+    verifySession();
   }, []);
 
   const login = async (email, password) => {

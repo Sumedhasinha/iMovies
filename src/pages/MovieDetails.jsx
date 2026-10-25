@@ -6,6 +6,7 @@ import { useBooking } from '../context/BookingContext';
 import { useWatchlist } from '../context/WatchlistContext';
 import ShowtimeSelector from '../components/ShowtimeSelector';
 import Modal from '../components/Modal';
+import { getAvailableDates } from '../utils/dates';
 import { getFallbackBackdrop, getFallbackPoster } from '../utils/imageFallback';
 import {
   Star,
@@ -27,6 +28,9 @@ export default function MovieDetails() {
   const { startBooking } = useBooking();
   const { isFavorite, toggleFavorite } = useWatchlist();
 
+  const dates = getAvailableDates(7);
+  const [selectedDate, setSelectedDate] = useState(dates[0]);
+  const [loadingSchedule, setLoadingSchedule] = useState(false);
   const [movie, setMovie] = useState(null);
   const [theatresSchedule, setTheatresSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,12 +55,6 @@ export default function MovieDetails() {
           setMovie(res.data);
           setBackdropSrc(res.data.backdrop);
           setPosterSrc(res.data.poster);
-
-          // Load showtimes for today
-          const scheduleRes = await getShowtimes(id, new Date().toISOString().split('T')[0]);
-          if (scheduleRes.success) {
-            setTheatresSchedule(scheduleRes.data || []);
-          }
         }
       } catch (err) {
         if (isMounted) setError(err.message || 'Failed to load movie details');
@@ -70,6 +68,30 @@ export default function MovieDetails() {
       isMounted = false;
     };
   }, [id]);
+
+  // Load / refresh showtimes when movie or selected date changes
+  useEffect(() => {
+    let isMounted = true;
+    async function loadSchedule() {
+      if (!movie) return;
+      setLoadingSchedule(true);
+      try {
+        const scheduleRes = await getShowtimes(movie.id || id, selectedDate.isoDate);
+        if (isMounted && scheduleRes.success) {
+          setTheatresSchedule(scheduleRes.data || []);
+        }
+      } catch (err) {
+        console.error('Failed to load schedule for date:', err);
+      } finally {
+        if (isMounted) setLoadingSchedule(false);
+      }
+    }
+
+    loadSchedule();
+    return () => {
+      isMounted = false;
+    };
+  }, [id, movie?.id, selectedDate.isoDate]);
 
   const handleConfirmShowtime = ({ theatre, date, showtime }) => {
     // Save to context and navigate to seat selection
@@ -414,6 +436,9 @@ export default function MovieDetails() {
           <ShowtimeSelector
             theatresData={theatresSchedule}
             onConfirmSelection={handleConfirmShowtime}
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            loading={loadingSchedule}
           />
         </section>
       </div>

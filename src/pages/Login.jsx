@@ -189,6 +189,24 @@ export default function Login() {
             Create one
           </Link>
         </div>
+
+        {/* Demo Credentials Box */}
+        <div
+          style={{
+            marginTop: '1.5rem',
+            padding: '0.75rem 1rem',
+            borderRadius: 'var(--radius-sm)',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid var(--border-subtle)',
+            fontSize: '0.75rem',
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            lineHeight: 1.5
+          }}
+        >
+          <div><strong>Demo Member:</strong> <code>alex.morgan@imovies.vip</code> / <code>CinemaPass2026!</code></div>
+          <div><strong>Demo Admin:</strong> <code>admin@imovies.vip</code> / <code>AdminPass2026!</code></div>
+        </div>
       </div>
     </div>
   );
